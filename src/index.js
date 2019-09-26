@@ -1,88 +1,34 @@
 import 'bootstrap/dist/css/bootstrap.css'
-import jokes from "./jokes";
+import $ from 'jquery';
+window.jQuery = window.$ = $;
 
-//const allJokes = jokes.getJokes().map(joke => "<li>"+joke+"</li>");
-//document.getElementById("jokes").innerHTML = allJokes.join("");
- 
 
-//Joke by id and add
-document.getElementById("but").onclick = function (e) {
-    e.preventDefault();
-    const idJ = document.querySelector("#txt");
-   // console.log(idJ.value);
- const allJokes = jokes.getJokeById([idJ.value]);
- document.getElementById("jokes").innerHTML = allJokes;
-  
- }
 
- document.getElementById("but2").onclick = function (e) {
-    e.preventDefault();
-    const idJ = document.querySelector("#txt");
-   // console.log(idJ.value);
- jokes.addJoke(idJ.value);
-
- const allJokes = jokes.getJokes().map(joke => "<li>"+joke+"</li>");
- document.getElementById("jokes").innerHTML = allJokes.join("");
- }
-
- 
-
- function jokeToP(item) {
-    var dataJoke = [item.joke];
-    return dataJoke;
-}
-
-document.getElementById("but3").onclick = function getQuote(e) {
-    e.preventDefault();
-    fetch("https://studypoints.info/jokes/api/jokes/period/hour")
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        const quote = document.querySelector("#q");
-        quote.innerHTML = jokeToP(data);
+//Wanted to try out jQuery so did that instead. 
+$("path").on('click', function () {
+    var idC = (this.id);
+    idC = idC.split('-')[0];
+    //console.log(idC);
+    document.getElementById(idC).style.fill = "red";
+    //return fill to grey
+    $("path").on('click', function () {
+        document.getElementById(idC).style.fill = "#c0c0c0";
     });
-  
- }
+    
+    const promise1 = fetch("http://restcountries.eu/rest/v1/alpha?codes=" + idC);
+    const promise2 = promise1.then(function (response) {
+        return response.json();
+    })
+    promise2.then(function (data) {
+        console.log(data);
+        promise2.then(data => {
+            var tableData = data.map(x => "<tr><td>" + x.name + "</td><td>" + x.population + "</td><td>" + x.area + "</td><td>" + x.borders + "</td></tr>");
+            tableData.unshift("<table class=\"table\"><tr><th>Country</th><th>population</th><th>area</th><th>Borders</th></tr>");
+            tableData.push("</table>");
+            tableData.join();
+            const RC = document.querySelector("#RC");
+            RC.innerHTML = tableData;
+        });
+    });
+});
 
-    //setInterval(function() {
-    //    getQuote;
-  //}, 5000);
-
-
- //SVG NSEW
- window.onload = function(){
-    document.getElementById('north').addEventListener("click", getNorth);
-    document.getElementById('west').addEventListener("click", getWest);
-    document.getElementById('south').addEventListener("click", getSouth);
-    document.getElementById('east').addEventListener("click", getEast);
-}
-
-var yCO = "You Clicked On = ";
-
-
-
-
-
-function getNorth(){
-    var x = document.getElementById("north");
-    var y = document.getElementById("clickedOn");
-    y.innerText = yCO +  x.id;
-}
-
-function getWest(){
-    var x = document.getElementById("west");
-    var y = document.getElementById("clickedOn");
-    y.innerText = yCO +  x.id;
-}
-
-function getSouth(){
-    var x = document.getElementById("south");
-    var y = document.getElementById("clickedOn");
-    y.innerText = yCO +  x.id;
-}
-
-function getEast(){
-    var x = document.getElementById("east");
-    var y = document.getElementById("clickedOn");
-    y.innerText = yCO +  x.id;
-}
